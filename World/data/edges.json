@@ -43,6 +43,13 @@
       "properties": {}
     },
     {
+      "id": "edge_aldric_kinship_mira",
+      "type": "KINSHIP",
+      "source_id": "ent_aldric",
+      "target_id": "ent_mira",
+      "properties": {"relation": "sister"}
+    },
+    {
       "id": "edge_rowan_owned_crooked_tavern",
       "type": "OWNED",
       "source_id": "ent_rowan",

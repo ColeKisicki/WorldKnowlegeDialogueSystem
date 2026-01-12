@@ -41,6 +41,14 @@
       "tags": ["person", "family"]
     },
     {
+      "id": "ent_mira",
+      "name": "Mira",
+      "type": "person",
+      "aliases": ["Mira Vale"],
+      "description": "A healer who runs a small apothecary in Port Valor.",
+      "tags": ["person", "healer"]
+    },
+    {
       "id": "ent_ironwatch",
       "name": "Ironwatch",
       "type": "faction",

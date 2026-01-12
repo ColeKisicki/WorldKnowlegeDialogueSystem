@@ -58,9 +58,15 @@ def retrieve_graph_knowledge(state: DialogueState) -> DialogueState:
     )
 
     graph = get_world_graph()
+    if graph_spec.graph_intent == graph_spec.graph_intent.NONE:
+        state["graph_facts"] = []
+        state["graph_neighbor_ids"] = []
+        return state
     edge_types = graph_spec.edge_types or None
 
     entity_names = [entity.name for entity in query_spec.entities]
+    if not entity_names and npc is not None:
+        entity_names = [getattr(npc, "name", "")]
     entity_ids = store.resolve_entity_ids(entity_names)
     neighbor_entity_ids = set()
     graph_facts = []

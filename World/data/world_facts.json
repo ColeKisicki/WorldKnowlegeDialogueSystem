@@ -49,6 +49,14 @@
       ]
     },
     {
+      "id": "ent_mira",
+      "name": "Mira",
+      "type": "person",
+      "aliases": ["Mira Vale"],
+      "description": "A healer who runs a small apothecary in Port Valor.",
+      "relationships": []
+    },
+    {
       "id": "ent_ironwatch",
       "name": "Ironwatch",
       "type": "faction",
@@ -209,6 +217,78 @@
       "text": "Grayfall is an inland town that supplies salt to Port Valor via the Salt Road.",
       "source": "world_seed",
       "tags": ["town", "trade"]
+    },
+    {
+      "id": "fact_014",
+      "entity_id": "ent_mira",
+      "type": "biography",
+      "text": "Mira Vale runs an apothecary near the east quay, known for remedies against dock fever.",
+      "source": "world_seed",
+      "tags": ["healer", "apothecary"]
+    },
+    {
+      "id": "fact_015",
+      "entity_id": "ent_mira",
+      "type": "biography",
+      "text": "Mira keeps a small greenhouse of sea-wrack herbs for tinctures.",
+      "source": "world_seed",
+      "tags": ["herbs", "healing"]
+    },
+    {
+      "id": "fact_016",
+      "entity_id": "ent_port_valor",
+      "type": "economy",
+      "text": "Port Valor collects a docking tithe at the east quay to fund lighthouse repairs.",
+      "source": "world_seed",
+      "tags": ["economy", "harbor"]
+    },
+    {
+      "id": "fact_017",
+      "entity_id": "ent_whisper_market",
+      "type": "rumor",
+      "text": "Whisper Market traders say rare sea-glass shows up only on fog nights.",
+      "source": "world_seed",
+      "tags": ["rumor", "market"]
+    },
+    {
+      "id": "fact_018",
+      "entity_id": "ent_lantern_guild",
+      "type": "organization",
+      "text": "The Lantern Guild trains keepers for three lighthouse towers along Valor Bay.",
+      "source": "world_seed",
+      "tags": ["guild", "training"]
+    },
+    {
+      "id": "fact_019",
+      "entity_id": "ent_ironwatch",
+      "type": "organization",
+      "text": "Ironwatch patrols rotate every four hours and keep a watch ledger at the south gate.",
+      "source": "world_seed",
+      "tags": ["guard", "routine"]
+    },
+    {
+      "id": "fact_020",
+      "entity_id": "ent_salt_road",
+      "type": "infrastructure",
+      "text": "Waystones mark the Salt Road each league between Port Valor and Grayfall.",
+      "source": "world_seed",
+      "tags": ["route", "waystones"]
+    },
+    {
+      "id": "fact_021",
+      "entity_id": "ent_blackkeel",
+      "type": "event",
+      "text": "Before vanishing, the Blackkeel carried stained glass bound for the Lantern Guild.",
+      "source": "world_seed",
+      "tags": ["ship", "cargo"]
+    },
+    {
+      "id": "fact_022",
+      "entity_id": "ent_valor_bay",
+      "type": "weather",
+      "text": "Fisherfolk avoid Valor Bay during the Mooncall tides when currents turn erratic.",
+      "source": "world_seed",
+      "tags": ["weather", "tides"]
     }
   ]
 }
