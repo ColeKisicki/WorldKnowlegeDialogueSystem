@@ -5,6 +5,7 @@ Handles calling the language model.
 
 from Dialogue.state import DialogueState
 from Dialogue.llm.provider import LLMProvider
+from Dialogue.trace import record_trace
 
 
 def call_llm(state: DialogueState) -> DialogueState:
@@ -37,4 +38,5 @@ def call_llm(state: DialogueState) -> DialogueState:
         # Store error in response for graceful handling
         state["raw_response"] = f"[Error generating response: {str(e)}]"
     
+    record_trace("call_llm", state)
     return state

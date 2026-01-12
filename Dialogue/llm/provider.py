@@ -7,7 +7,10 @@ Currently supports:
 
 from abc import ABC, abstractmethod
 from typing import Optional
-import google.generativeai as genai
+try:
+    from google import genai
+except ImportError:  # pragma: no cover
+    genai = None
 import requests
 import json
 from config import (
@@ -41,15 +44,20 @@ class GoogleLLMProvider(BaseLLMProvider):
         """
         self.model_name = model_name
         self.api_key = api_key or Vertex_API_KEY
-        
-        # Configure API once
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(model_name)
+        if genai is None:
+            raise ImportError(
+                "google-genai is required for GoogleLLMProvider. "
+                "Install it with `pip install google-genai`."
+            )
+        self.client = genai.Client(api_key=self.api_key)
     
     def generate(self, prompt: str) -> str:
         """Generate a response from Google Generative AI."""
         try:
-            response = self.model.generate_content(prompt)
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=prompt,
+            )
             return response.text
         except Exception as e:
             raise Exception(f"Google LLM generation failed: {e}")

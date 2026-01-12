@@ -15,7 +15,9 @@ SYSTEM_PROMPT = (
     "otherwise 0. "
     "Location bias: default NEAR_NPC. "
     "If user mentions a place explicitly, use SPECIFIC_LOCATION + that name. "
-    "Extract named entities (orgs, locations, items) into entities."
+    "Extract named entities (orgs, locations, items) into entities. "
+    "Set needs_retrieval=false for greetings, chit-chat, or messages that do not "
+    "require world knowledge."
 )
 
 DEV_PROMPT = """Schema:
@@ -23,6 +25,7 @@ DEV_PROMPT = """Schema:
   "intent": "ASK_EVENTS | ASK_ENTITY_FACTS | ASK_LOCATION | ASK_HOW_TO | ASK_RELATIONSHIP | ASK_COMPARISON | ASK_COUNT | SMALLTALK | OTHER",
   "query_text": "string",
   "entities": [{"name": "string", "type": "NPC | ORG | FACTION | LOCATION | ITEM | EVENT | UNKNOWN"}],
+  "needs_retrieval": true,
   "time_window_days": 0,
   "time_constraint_text": "string",
   "location_bias": {"mode": "NEAR_NPC | SPECIFIC_LOCATION | NONE", "location_name": "string"},
@@ -31,28 +34,31 @@ DEV_PROMPT = """Schema:
 
 Examples:
 Input: Have you heard about any bandit attacks lately?
-Output: {"intent":"ASK_EVENTS","query_text":"bandit attacks","entities":[],"time_window_days":14,"time_constraint_text":"lately","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_EVENTS","query_text":"bandit attacks","entities":[],"needs_retrieval":true,"time_window_days":14,"time_constraint_text":"lately","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
 
 Input: What happened on the North Road last week?
-Output: {"intent":"ASK_EVENTS","query_text":"what happened on the North Road","entities":[{"name":"North Road","type":"LOCATION"}],"time_window_days":7,"time_constraint_text":"last week","location_bias":{"mode":"SPECIFIC_LOCATION","location_name":"North Road"},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_EVENTS","query_text":"what happened on the North Road","entities":[{"name":"North Road","type":"LOCATION"}],"needs_retrieval":true,"time_window_days":7,"time_constraint_text":"last week","location_bias":{"mode":"SPECIFIC_LOCATION","location_name":"North Road"},"answer_format":"NORMAL"}
 
 Input: Where can I find Sunleaf?
-Output: {"intent":"ASK_LOCATION","query_text":"find Sunleaf","entities":[{"name":"Sunleaf","type":"ITEM"}],"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_LOCATION","query_text":"find Sunleaf","entities":[{"name":"Sunleaf","type":"ITEM"}],"needs_retrieval":true,"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
 
 Input: What do the Iron Guard do?
-Output: {"intent":"ASK_ENTITY_FACTS","query_text":"Iron Guard role","entities":[{"name":"Iron Guard","type":"ORG"}],"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_ENTITY_FACTS","query_text":"Iron Guard role","entities":[{"name":"Iron Guard","type":"ORG"}],"needs_retrieval":true,"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
 
 Input: What is the Lantern Guild responsible for?
-Output: {"intent":"ASK_ENTITY_FACTS","query_text":"Lantern Guild responsibilities","entities":[{"name":"Lantern Guild","type":"ORG"}],"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_ENTITY_FACTS","query_text":"Lantern Guild responsibilities","entities":[{"name":"Lantern Guild","type":"ORG"}],"needs_retrieval":true,"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
 
 Input: Who does the Ironwatch report to?
-Output: {"intent":"ASK_RELATIONSHIP","query_text":"Ironwatch chain of command","entities":[{"name":"Ironwatch","type":"ORG"}],"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_RELATIONSHIP","query_text":"Ironwatch chain of command","entities":[{"name":"Ironwatch","type":"ORG"}],"needs_retrieval":true,"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
 
 Input: Is Port Valor bigger than Grayfall?
-Output: {"intent":"ASK_COMPARISON","query_text":"Port Valor compared to Grayfall","entities":[{"name":"Port Valor","type":"LOCATION"},{"name":"Grayfall","type":"LOCATION"}],"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NONE","location_name":""},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_COMPARISON","query_text":"Port Valor compared to Grayfall","entities":[{"name":"Port Valor","type":"LOCATION"},{"name":"Grayfall","type":"LOCATION"}],"needs_retrieval":true,"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NONE","location_name":""},"answer_format":"NORMAL"}
 
 Input: How many ships disappeared this season?
-Output: {"intent":"ASK_COUNT","query_text":"ships disappeared this season","entities":[],"time_window_days":0,"time_constraint_text":"this season","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
+Output: {"intent":"ASK_COUNT","query_text":"ships disappeared this season","entities":[],"needs_retrieval":true,"time_window_days":0,"time_constraint_text":"this season","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
+
+Input: Hi there.
+Output: {"intent":"SMALLTALK","query_text":"hi","entities":[],"needs_retrieval":false,"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}
 
 Input: Tell me about Prince Theron.
 Output: {"intent":"ASK_ENTITY_FACTS","query_text":"Prince Theron","entities":[{"name":"Prince Theron","type":"NPC"}],"time_window_days":0,"time_constraint_text":"","location_bias":{"mode":"NEAR_NPC","location_name":""},"answer_format":"NORMAL"}

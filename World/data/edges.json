@@ -1,0 +1,74 @@
+{
+  "edges": [
+    {
+      "id": "edge_port_valor_located_in_valor_bay",
+      "type": "LOCATED_IN",
+      "source_id": "ent_port_valor",
+      "target_id": "ent_valor_bay",
+      "properties": {}
+    },
+    {
+      "id": "edge_crooked_tavern_located_in_port_valor",
+      "type": "LOCATED_IN",
+      "source_id": "ent_crooked_tavern",
+      "target_id": "ent_port_valor",
+      "properties": {}
+    },
+    {
+      "id": "edge_whisper_market_located_in_port_valor",
+      "type": "LOCATED_IN",
+      "source_id": "ent_whisper_market",
+      "target_id": "ent_port_valor",
+      "properties": {}
+    },
+    {
+      "id": "edge_aldric_owns_crooked_tavern",
+      "type": "OWNS",
+      "source_id": "ent_aldric",
+      "target_id": "ent_crooked_tavern",
+      "properties": {}
+    },
+    {
+      "id": "edge_aldric_kinship_rowan",
+      "type": "KINSHIP",
+      "source_id": "ent_aldric",
+      "target_id": "ent_rowan",
+      "properties": {"relation": "uncle"}
+    },
+    {
+      "id": "edge_aldric_inherited_from_rowan",
+      "type": "INHERITED_FROM",
+      "source_id": "ent_aldric",
+      "target_id": "ent_rowan",
+      "properties": {}
+    },
+    {
+      "id": "edge_rowan_owned_crooked_tavern",
+      "type": "OWNED",
+      "source_id": "ent_rowan",
+      "target_id": "ent_crooked_tavern",
+      "properties": {}
+    },
+    {
+      "id": "edge_ironwatch_operates_in_port_valor",
+      "type": "OPERATES_IN",
+      "source_id": "ent_ironwatch",
+      "target_id": "ent_port_valor",
+      "properties": {}
+    },
+    {
+      "id": "edge_lantern_guild_operates_in_valor_bay",
+      "type": "OPERATES_IN",
+      "source_id": "ent_lantern_guild",
+      "target_id": "ent_valor_bay",
+      "properties": {}
+    },
+    {
+      "id": "edge_salt_road_connects_port_valor",
+      "type": "CONNECTS",
+      "source_id": "ent_salt_road",
+      "target_id": "ent_port_valor",
+      "properties": {}
+    }
+  ]
+}

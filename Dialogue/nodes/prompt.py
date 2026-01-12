@@ -4,6 +4,7 @@ Constructs the full prompt from various sources.
 """
 
 from Dialogue.state import DialogueState
+from Dialogue.trace import record_trace
 
 
 def build_prompt(state: DialogueState) -> DialogueState:
@@ -27,6 +28,7 @@ def build_prompt(state: DialogueState) -> DialogueState:
     history = state.get("conversation_history", "")
     user_input = state.get("user_input", "")
     retrieval_results = state.get("retrieval_results", [])
+    graph_facts = state.get("graph_facts", [])
     
     # Build full prompt
     full_prompt = f"""{system_prompt}"""
@@ -44,6 +46,13 @@ def build_prompt(state: DialogueState) -> DialogueState:
         facts_block = "None."
 
     full_prompt += f"\n\nWORLD FACTS:\n{facts_block}"
+
+    if graph_facts:
+        graph_block = "\n".join(f"- {fact}" for fact in graph_facts)
+    else:
+        graph_block = "None."
+
+    full_prompt += f"\n\nGRAPH FACTS:\n{graph_block}"
     
     if history:
         full_prompt += f"\n\n{history}"
@@ -51,4 +60,5 @@ def build_prompt(state: DialogueState) -> DialogueState:
     full_prompt += f"\nHuman: {user_input}\nAI:"
     
     state["full_prompt"] = full_prompt
+    record_trace("build_prompt", state)
     return state

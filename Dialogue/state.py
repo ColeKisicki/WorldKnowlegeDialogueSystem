@@ -52,6 +52,9 @@ class DialogueState(TypedDict):
     # Retrieval (Phase 1 RAG)
     retrieval_results: List[Dict[str, str]]
     query_spec: Dict[str, Any]
+    graph_facts: List[str]
+    graph_query_spec: Dict[str, Any]
+    graph_neighbor_ids: List[str]
     
     # Extensible fields for future phases
     # retrieval_results: Optional[List[str]]  # For knowledge retrieval

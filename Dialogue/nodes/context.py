@@ -5,6 +5,7 @@ Handles loading and formatting NPC context.
 
 from Dialogue.state import DialogueState
 from Dialogue.prompts.system_prompt import get_npc_system_prompt
+from Dialogue.trace import record_trace
 
 
 def load_npc_context(state: DialogueState) -> DialogueState:
@@ -27,4 +28,5 @@ def load_npc_context(state: DialogueState) -> DialogueState:
     else:
         state["system_prompt"] = ""
     
+    record_trace("load_npc_context", state)
     return state

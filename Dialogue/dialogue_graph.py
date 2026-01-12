@@ -7,7 +7,8 @@ from langgraph.graph import StateGraph, START, END
 from Dialogue.state import DialogueState
 from Dialogue.nodes.context import load_npc_context
 from Dialogue.nodes.prompt import build_prompt
-from Dialogue.nodes.retrieval import retrieve_knowledge
+from Dialogue.nodes.graph_retrieval import retrieve_graph_knowledge
+from Dialogue.nodes.vector_retrieval import retrieve_vector_knowledge
 from Dialogue.nodes.llm import call_llm
 from Dialogue.nodes.format import format_response
 from Dialogue.entities.npc import NPC
@@ -22,7 +23,9 @@ def create_dialogue_graph():
           ↓
         load_npc_context     (Format NPC into system prompt)
           ↓
-        retrieve_knowledge   (Fetch world facts)
+        retrieve_graph_knowledge (Fetch graph facts)
+          ƒ+""
+        retrieve_vector_knowledge (Fetch vector facts)
           ƒ+""
         build_prompt         (Construct full prompt)
           ↓
@@ -43,21 +46,41 @@ def create_dialogue_graph():
     
     # Add nodes in logical order
     graph.add_node("load_npc", load_npc_context)
-    graph.add_node("retrieve_knowledge", retrieve_knowledge)
+    graph.add_node("retrieve_graph_knowledge", retrieve_graph_knowledge)
+    graph.add_node("retrieve_vector_knowledge", retrieve_vector_knowledge)
     graph.add_node("build_prompt", build_prompt)
     graph.add_node("call_llm", call_llm)
     graph.add_node("format_response", format_response)
     
     # Define edges (linear for now, can add conditionals later)
     graph.add_edge(START, "load_npc")
-    graph.add_edge("load_npc", "retrieve_knowledge")
-    graph.add_edge("retrieve_knowledge", "build_prompt")
+    graph.add_edge("load_npc", "retrieve_graph_knowledge")
+    graph.add_edge("retrieve_graph_knowledge", "retrieve_vector_knowledge")
+    graph.add_edge("retrieve_vector_knowledge", "build_prompt")
     graph.add_edge("build_prompt", "call_llm")
     graph.add_edge("call_llm", "format_response")
     graph.add_edge("format_response", END)
     
     # Compile the graph
     return graph.compile()
+
+
+def get_dialogue_graph_mermaid() -> str:
+    """
+    Return a Mermaid diagram of the current dialogue graph.
+    """
+    return "\n".join(
+        [
+            "flowchart TD",
+            "  START([START]) --> load_npc",
+            "  load_npc --> retrieve_graph_knowledge",
+            "  retrieve_graph_knowledge --> retrieve_vector_knowledge",
+            "  retrieve_vector_knowledge --> build_prompt",
+            "  build_prompt --> call_llm",
+            "  call_llm --> format_response",
+            "  format_response --> END([END])",
+        ]
+    )
 
 
 def run_dialogue_turn(graph, npc: NPC, user_input: str, conversation_history: str = "") -> str:
@@ -83,6 +106,9 @@ def run_dialogue_turn(graph, npc: NPC, user_input: str, conversation_history: st
         "formatted_response": "",
         "retrieval_results": [],
         "query_spec": {},
+        "graph_facts": [],
+        "graph_query_spec": {},
+        "graph_neighbor_ids": [],
     }
     
     result = graph.invoke(initial_state)

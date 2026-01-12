@@ -3,8 +3,17 @@ Main entry point for the world dialogue system.
 Sets up and runs an interactive NPC dialogue session using LangGraph.
 """
 
+import argparse
+import logging
+
 from Dialogue.entities.npc import NPC
-from Dialogue.dialogue_graph import create_dialogue_graph, run_dialogue_turn
+from Dialogue.dialogue_graph import (
+    create_dialogue_graph,
+    get_dialogue_graph_mermaid,
+    run_dialogue_turn,
+)
+from Dialogue.live_viewer import start_trace_server
+from Dialogue.trace import enable_trace
 
 
 def create_sample_npc() -> NPC:
@@ -22,6 +31,46 @@ def create_sample_npc() -> NPC:
 
 def main():
     """Run an interactive NPC dialogue session."""
+    parser = argparse.ArgumentParser(description="World Dialogue System CLI")
+    parser.add_argument(
+        "--retrieval-debug",
+        action="store_true",
+        help="Enable detailed retrieval logging",
+    )
+    parser.add_argument(
+        "--show-graph",
+        action="store_true",
+        help="Print the dialogue graph in Mermaid format",
+    )
+    parser.add_argument(
+        "--live-viewer",
+        action="store_true",
+        help="Start the live trace viewer",
+    )
+    parser.add_argument(
+        "--live-viewer-port",
+        type=int,
+        default=8765,
+        help="Port for the live trace viewer",
+    )
+    args = parser.parse_args()
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+    logging.getLogger("httpcore").setLevel(logging.WARNING)
+    logging.getLogger("google").setLevel(logging.WARNING)
+    if args.retrieval_debug:
+        logging.getLogger("Dialogue.nodes.graph_retrieval").setLevel(logging.DEBUG)
+        logging.getLogger("Dialogue.nodes.vector_retrieval").setLevel(logging.DEBUG)
+    if args.show_graph:
+        mermaid = get_dialogue_graph_mermaid()
+        print("\n[Dialogue Graph - Mermaid]")
+        print(mermaid)
+        print()
+    if args.live_viewer:
+        enable_trace()
+        start_trace_server(port=args.live_viewer_port)
+        print(f"[Live Viewer] http://127.0.0.1:{args.live_viewer_port}")
+        print("[Live Viewer] Writing trace to trace/trace.jsonl\n")
     print("=" * 60)
     print("World Dialogue System - NPC Chat Session")
     print("=" * 60)

@@ -1,0 +1,92 @@
+{
+  "entities": [
+    {
+      "id": "ent_port_valor",
+      "name": "Port Valor",
+      "type": "location",
+      "aliases": ["Valor", "The Port"],
+      "description": "A bustling harbor city on Valor Bay known for shipyards and trade.",
+      "tags": ["city", "harbor"]
+    },
+    {
+      "id": "ent_crooked_tavern",
+      "name": "The Crooked Tavern",
+      "type": "location",
+      "aliases": ["Crooked Tavern", "The Crooked"],
+      "description": "A weathered tavern favored by sailors and dockhands.",
+      "tags": ["tavern", "docks"]
+    },
+    {
+      "id": "ent_valor_bay",
+      "name": "Valor Bay",
+      "type": "location",
+      "aliases": ["The Bay"],
+      "description": "A broad bay with treacherous fogs in early autumn.",
+      "tags": ["bay", "weather"]
+    },
+    {
+      "id": "ent_aldric",
+      "name": "Aldric",
+      "type": "person",
+      "aliases": ["Aldric the Keeper"],
+      "description": "A middle-aged tavern keeper who runs the Crooked Tavern.",
+      "tags": ["npc", "person"]
+    },
+    {
+      "id": "ent_rowan",
+      "name": "Rowan",
+      "type": "person",
+      "aliases": ["Uncle Rowan"],
+      "description": "Aldric's uncle who previously owned the Crooked Tavern.",
+      "tags": ["person", "family"]
+    },
+    {
+      "id": "ent_ironwatch",
+      "name": "Ironwatch",
+      "type": "faction",
+      "aliases": ["City Guard", "Ironwatch Guard"],
+      "description": "The official guard force of Port Valor.",
+      "tags": ["guard", "city"]
+    },
+    {
+      "id": "ent_lantern_guild",
+      "name": "Lantern Guild",
+      "type": "faction",
+      "aliases": ["Guild of Lanterns"],
+      "description": "A guild that maintains lighthouses around Valor Bay.",
+      "tags": ["guild", "lighthouse"]
+    },
+    {
+      "id": "ent_whisper_market",
+      "name": "Whisper Market",
+      "type": "location",
+      "aliases": ["The Market Beneath", "Whisper Bazaar"],
+      "description": "A night bazaar hidden beneath the old docks.",
+      "tags": ["market", "underground"]
+    },
+    {
+      "id": "ent_blackkeel",
+      "name": "Blackkeel",
+      "type": "ship",
+      "aliases": ["The Blackkeel"],
+      "description": "A merchant sloop that vanished during the Storm of Years.",
+      "tags": ["ship", "mystery"]
+    },
+    {
+      "id": "ent_salt_road",
+      "name": "Salt Road",
+      "type": "route",
+      "aliases": ["The Salt Road"],
+      "description": "A trade road connecting Port Valor to inland Grayfall.",
+      "tags": ["trade", "route"]
+    },
+    {
+      "id": "ent_grayfall",
+      "name": "Grayfall",
+      "type": "location",
+      "aliases": ["Grayfall Town"],
+      "description": "An inland town known for its salt mines.",
+      "tags": ["town", "trade"]
+    }
+  ]
+}

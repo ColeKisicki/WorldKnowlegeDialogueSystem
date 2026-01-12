@@ -62,6 +62,7 @@ class QuerySpec(BaseModel):
     intent: Intent
     query_text: str
     entities: List[ExtractedEntity] = Field(default_factory=list)
+    needs_retrieval: bool = True
     time_window_days: int = 0
     time_constraint_text: str = ""
     location_bias: LocationBias

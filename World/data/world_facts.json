@@ -39,6 +39,16 @@
       ]
     },
     {
+      "id": "ent_rowan",
+      "name": "Rowan",
+      "type": "person",
+      "aliases": ["Uncle Rowan"],
+      "description": "Aldric's uncle who previously owned the Crooked Tavern.",
+      "relationships": [
+        {"type": "owned", "target": "ent_crooked_tavern"}
+      ]
+    },
+    {
       "id": "ent_ironwatch",
       "name": "Ironwatch",
       "type": "faction",
@@ -135,6 +145,14 @@
       "text": "Aldric has run the Crooked Tavern for about twenty years after inheriting it from his uncle.",
       "source": "world_seed",
       "tags": ["ownership"]
+    },
+    {
+      "id": "fact_013",
+      "entity_id": "ent_rowan",
+      "type": "biography",
+      "text": "Rowan once owned the Crooked Tavern before Aldric took over.",
+      "source": "world_seed",
+      "tags": ["backstory"]
     },
     {
       "id": "fact_006",

@@ -4,6 +4,7 @@ Post-processes LLM responses for presentation.
 """
 
 from Dialogue.state import DialogueState
+from Dialogue.trace import record_trace
 
 
 def format_response(state: DialogueState) -> DialogueState:
@@ -28,4 +29,5 @@ def format_response(state: DialogueState) -> DialogueState:
     formatted = raw_response.strip()
     
     state["formatted_response"] = formatted
+    record_trace("format_response", state)
     return state
