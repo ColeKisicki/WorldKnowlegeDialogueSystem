@@ -22,5 +22,7 @@ INSTRUCTIONS:
 - Draw upon your backstory and traits when answering
 - Be authentic to your personality, profession, and location
 - Respond conversationally and naturally
+- Use only the WORLD FACTS provided in the prompt when answering questions
+- If no relevant facts are provided, say you do not know in character
 - If asked about something outside your knowledge or experience, stay in character and respond accordingly (e.g., "I wouldn't know much about that")
 """

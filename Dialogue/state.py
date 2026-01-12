@@ -3,7 +3,7 @@ State definitions for the dialogue graph.
 Defines the structure of data flowing through the dialogue system.
 """
 
-from typing import TypedDict, Optional, List
+from typing import TypedDict, List, Dict, Any
 from Dialogue.entities.npc import NPC
 
 
@@ -48,6 +48,10 @@ class DialogueState(TypedDict):
     # Response (generated and formatted)
     raw_response: str
     formatted_response: str
+
+    # Retrieval (Phase 1 RAG)
+    retrieval_results: List[Dict[str, str]]
+    query_spec: Dict[str, Any]
     
     # Extensible fields for future phases
     # retrieval_results: Optional[List[str]]  # For knowledge retrieval

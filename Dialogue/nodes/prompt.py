@@ -26,9 +26,24 @@ def build_prompt(state: DialogueState) -> DialogueState:
     system_prompt = state.get("system_prompt", "")
     history = state.get("conversation_history", "")
     user_input = state.get("user_input", "")
+    retrieval_results = state.get("retrieval_results", [])
     
     # Build full prompt
     full_prompt = f"""{system_prompt}"""
+
+    facts_lines = []
+    for fact in retrieval_results:
+        fact_id = fact.get("id", "unknown")
+        text = fact.get("text", "")
+        if text:
+            facts_lines.append(f"- ({fact_id}) {text}")
+
+    if facts_lines:
+        facts_block = "\n".join(facts_lines)
+    else:
+        facts_block = "None."
+
+    full_prompt += f"\n\nWORLD FACTS:\n{facts_block}"
     
     if history:
         full_prompt += f"\n\n{history}"

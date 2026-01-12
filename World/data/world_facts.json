@@ -1,0 +1,196 @@
+{
+  "entities": [
+    {
+      "id": "ent_port_valor",
+      "name": "Port Valor",
+      "type": "location",
+      "aliases": ["Valor", "The Port"],
+      "description": "A bustling harbor city on Valor Bay known for shipyards and trade.",
+      "relationships": [
+        {"type": "located_in", "target": "ent_valor_bay"}
+      ]
+    },
+    {
+      "id": "ent_crooked_tavern",
+      "name": "The Crooked Tavern",
+      "type": "location",
+      "aliases": ["Crooked Tavern", "The Crooked"],
+      "description": "A weathered tavern favored by sailors and dockhands.",
+      "relationships": [
+        {"type": "located_in", "target": "ent_port_valor"}
+      ]
+    },
+    {
+      "id": "ent_valor_bay",
+      "name": "Valor Bay",
+      "type": "location",
+      "aliases": ["The Bay"],
+      "description": "A broad bay with treacherous fogs in early autumn.",
+      "relationships": []
+    },
+    {
+      "id": "ent_aldric",
+      "name": "Aldric",
+      "type": "person",
+      "aliases": ["Aldric the Keeper"],
+      "description": "A middle-aged tavern keeper who runs the Crooked Tavern.",
+      "relationships": [
+        {"type": "owns", "target": "ent_crooked_tavern"}
+      ]
+    },
+    {
+      "id": "ent_ironwatch",
+      "name": "Ironwatch",
+      "type": "faction",
+      "aliases": ["City Guard", "Ironwatch Guard"],
+      "description": "The official guard force of Port Valor.",
+      "relationships": [
+        {"type": "operates_in", "target": "ent_port_valor"}
+      ]
+    },
+    {
+      "id": "ent_lantern_guild",
+      "name": "Lantern Guild",
+      "type": "faction",
+      "aliases": ["Guild of Lanterns"],
+      "description": "A guild that maintains lighthouses around Valor Bay.",
+      "relationships": [
+        {"type": "operates_in", "target": "ent_valor_bay"}
+      ]
+    },
+    {
+      "id": "ent_whisper_market",
+      "name": "Whisper Market",
+      "type": "location",
+      "aliases": ["The Market Beneath", "Whisper Bazaar"],
+      "description": "A night bazaar hidden beneath the old docks.",
+      "relationships": [
+        {"type": "located_in", "target": "ent_port_valor"}
+      ]
+    },
+    {
+      "id": "ent_blackkeel",
+      "name": "Blackkeel",
+      "type": "ship",
+      "aliases": ["The Blackkeel"],
+      "description": "A merchant sloop that vanished during the Storm of Years.",
+      "relationships": []
+    },
+    {
+      "id": "ent_salt_road",
+      "name": "Salt Road",
+      "type": "route",
+      "aliases": ["The Salt Road"],
+      "description": "A trade road connecting Port Valor to inland Grayfall.",
+      "relationships": [
+        {"type": "connects", "target": "ent_port_valor"}
+      ]
+    },
+    {
+      "id": "ent_grayfall",
+      "name": "Grayfall",
+      "type": "location",
+      "aliases": ["Grayfall Town"],
+      "description": "An inland town known for its salt mines.",
+      "relationships": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact_001",
+      "entity_id": "ent_port_valor",
+      "type": "overview",
+      "text": "Port Valor is a bustling harbor city on Valor Bay known for shipyards and trade.",
+      "source": "world_seed",
+      "tags": ["city", "harbor"]
+    },
+    {
+      "id": "fact_002",
+      "entity_id": "ent_crooked_tavern",
+      "type": "overview",
+      "text": "The Crooked Tavern is a weathered sailors' tavern near the docks of Port Valor.",
+      "source": "world_seed",
+      "tags": ["tavern", "docks"]
+    },
+    {
+      "id": "fact_003",
+      "entity_id": "ent_aldric",
+      "type": "biography",
+      "text": "Aldric is a 45-year-old tavern keeper known for being observant and gruff.",
+      "source": "world_seed",
+      "tags": ["npc", "person"]
+    },
+    {
+      "id": "fact_004",
+      "entity_id": "ent_aldric",
+      "type": "biography",
+      "text": "Aldric lost his father to a storm at sea when he was twelve.",
+      "source": "world_seed",
+      "tags": ["backstory"]
+    },
+    {
+      "id": "fact_005",
+      "entity_id": "ent_crooked_tavern",
+      "type": "ownership",
+      "text": "Aldric has run the Crooked Tavern for about twenty years after inheriting it from his uncle.",
+      "source": "world_seed",
+      "tags": ["ownership"]
+    },
+    {
+      "id": "fact_006",
+      "entity_id": "ent_salt_road",
+      "type": "infrastructure",
+      "text": "The Salt Road connects Port Valor to Grayfall and carries most inland salt trade.",
+      "source": "world_seed",
+      "tags": ["trade", "route"]
+    },
+    {
+      "id": "fact_007",
+      "entity_id": "ent_lantern_guild",
+      "type": "organization",
+      "text": "The Lantern Guild maintains the lighthouses that guide ships into Valor Bay.",
+      "source": "world_seed",
+      "tags": ["guild", "lighthouse"]
+    },
+    {
+      "id": "fact_008",
+      "entity_id": "ent_blackkeel",
+      "type": "event",
+      "text": "The merchant sloop Blackkeel vanished during the Storm of Years with no survivors found.",
+      "source": "world_seed",
+      "tags": ["ship", "mystery"]
+    },
+    {
+      "id": "fact_009",
+      "entity_id": "ent_ironwatch",
+      "type": "organization",
+      "text": "Ironwatch is the official city guard of Port Valor and patrols the docks nightly.",
+      "source": "world_seed",
+      "tags": ["guard", "city"]
+    },
+    {
+      "id": "fact_010",
+      "entity_id": "ent_whisper_market",
+      "type": "location",
+      "text": "Whisper Market is a night bazaar hidden beneath the old docks where rare goods appear.",
+      "source": "world_seed",
+      "tags": ["market", "underground"]
+    },
+    {
+      "id": "fact_011",
+      "entity_id": "ent_valor_bay",
+      "type": "weather",
+      "text": "Valor Bay is known for sudden fog banks in early autumn that can hide reefs.",
+      "source": "world_seed",
+      "tags": ["weather", "bay"]
+    },
+    {
+      "id": "fact_012",
+      "entity_id": "ent_grayfall",
+      "type": "overview",
+      "text": "Grayfall is an inland town that supplies salt to Port Valor via the Salt Road.",
+      "source": "world_seed",
+      "tags": ["town", "trade"]
+    }
+  ]
+}
