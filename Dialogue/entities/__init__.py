@@ -1,0 +1,3 @@
+"""
+Entity definitions for dialogue.
+"""
