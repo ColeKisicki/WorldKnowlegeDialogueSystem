@@ -63,6 +63,8 @@ class QuerySpec(BaseModel):
     query_text: str
     entities: List[ExtractedEntity] = Field(default_factory=list)
     needs_retrieval: bool = True
+    subject_entity: str = ""
+    relationship_term: str = ""
     time_window_days: int = 0
     time_constraint_text: str = ""
     location_bias: LocationBias
@@ -71,6 +73,11 @@ class QuerySpec(BaseModel):
     @field_validator("query_text", "time_constraint_text")
     @classmethod
     def strip_strings(cls, value: str) -> str:
+        return value.strip()
+
+    @field_validator("subject_entity", "relationship_term")
+    @classmethod
+    def strip_optional_strings(cls, value: str) -> str:
         return value.strip()
 
     @field_validator("time_window_days")

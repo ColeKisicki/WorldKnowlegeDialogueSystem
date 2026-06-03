@@ -30,6 +30,12 @@
       "type": "person",
       "aliases": ["Aldric the Keeper"],
       "description": "A middle-aged tavern keeper who runs the Crooked Tavern.",
+      "age": 45,
+      "location": "The Crooked Tavern, Port Valor",
+      "profession": "Tavern Keeper",
+      "traits": ["observant", "gruff", "curious", "skeptical"],
+      "childhood_backstory": "Born to a fisherman's family in Port Valor. Spent youth learning the docks and the people who sailed them. Lost his father to a storm at sea when he was twelve.",
+      "adult_backstory": "Inherited the Crooked Tavern from his uncle at 25. Has run it for twenty years, making it a hub for sailors, merchants, and adventurers. Has heard countless stories and seen the rise and fall of fortunes.",
       "tags": ["npc", "person"]
     },
     {
@@ -38,6 +44,12 @@
       "type": "person",
       "aliases": ["Uncle Rowan"],
       "description": "Aldric's uncle who previously owned the Crooked Tavern.",
+      "age": 68,
+      "location": "Port Valor (retired)",
+      "profession": "Former Tavern Owner",
+      "traits": ["stubborn", "traditional", "quiet"],
+      "childhood_backstory": "Raised near the docks of Port Valor and learned the tavern trade young.",
+      "adult_backstory": "Owned the Crooked Tavern before Aldric and passed it on when he retired.",
       "tags": ["person", "family"]
     },
     {
@@ -46,7 +58,21 @@
       "type": "person",
       "aliases": ["Mira Vale"],
       "description": "A healer who runs a small apothecary in Port Valor.",
+      "age": 38,
+      "location": "East quay, Port Valor",
+      "profession": "Apothecary",
+      "traits": ["careful", "soft-spoken", "methodical"],
+      "childhood_backstory": "Grew up in Port Valor and apprenticed under a traveling herbalist.",
+      "adult_backstory": "Opened a small apothecary near the east quay and treats dock fever cases.",
       "tags": ["person", "healer"]
+    },
+    {
+      "id": "ent_dawnwatch",
+      "name": "Dawnwatch Lighthouse",
+      "type": "location",
+      "aliases": ["Dawnwatch", "The Dawnwatch"],
+      "description": "A lighthouse tower on the outer rocks of Valor Bay.",
+      "tags": ["lighthouse", "bay"]
     },
     {
       "id": "ent_ironwatch",
@@ -55,6 +81,20 @@
       "aliases": ["City Guard", "Ironwatch Guard"],
       "description": "The official guard force of Port Valor.",
       "tags": ["guard", "city"]
+    },
+    {
+      "id": "ent_captain_voss",
+      "name": "Captain Voss",
+      "type": "person",
+      "aliases": ["Voss"],
+      "description": "Commander of the Ironwatch garrison in Port Valor.",
+      "age": 52,
+      "location": "Ironwatch Garrison, Port Valor",
+      "profession": "Guard Captain",
+      "traits": ["disciplined", "stern", "pragmatic"],
+      "childhood_backstory": "Raised in Grayfall and enlisted in the Ironwatch as a teenager.",
+      "adult_backstory": "Rose through the ranks to command the Ironwatch garrison in Port Valor.",
+      "tags": ["person", "guard"]
     },
     {
       "id": "ent_lantern_guild",

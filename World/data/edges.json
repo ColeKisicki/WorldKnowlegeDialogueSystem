@@ -64,10 +64,31 @@
       "properties": {}
     },
     {
+      "id": "edge_captain_voss_leads_ironwatch",
+      "type": "LEADS",
+      "source_id": "ent_captain_voss",
+      "target_id": "ent_ironwatch",
+      "properties": {}
+    },
+    {
       "id": "edge_lantern_guild_operates_in_valor_bay",
       "type": "OPERATES_IN",
       "source_id": "ent_lantern_guild",
       "target_id": "ent_valor_bay",
+      "properties": {}
+    },
+    {
+      "id": "edge_dawnwatch_located_in_valor_bay",
+      "type": "LOCATED_IN",
+      "source_id": "ent_dawnwatch",
+      "target_id": "ent_valor_bay",
+      "properties": {}
+    },
+    {
+      "id": "edge_lantern_guild_operates_dawnwatch",
+      "type": "OPERATES_IN",
+      "source_id": "ent_lantern_guild",
+      "target_id": "ent_dawnwatch",
       "properties": {}
     },
     {

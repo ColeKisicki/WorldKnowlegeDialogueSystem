@@ -35,14 +35,17 @@ class WorldKnowledgeStore:
         with open(self.data_path, "r", encoding="utf-8") as f:
             payload = json.load(f)
 
-        for raw_entity in payload.get("entities", []):
+        base_dir = os.path.dirname(os.path.abspath(self.data_path))
+        entities_path = os.path.join(base_dir, "entities.json")
+        with open(entities_path, "r", encoding="utf-8") as f:
+            entities_payload = json.load(f)
+        for raw_entity in entities_payload.get("entities", []):
             entity = Entity(
                 entity_id=raw_entity["id"],
                 name=raw_entity["name"],
                 type=raw_entity.get("type", "unknown"),
                 aliases=raw_entity.get("aliases", []),
                 description=raw_entity.get("description", ""),
-                relationships=raw_entity.get("relationships", []),
             )
             self.entities[entity.entity_id] = entity
 

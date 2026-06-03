@@ -32,16 +32,27 @@ AVAILABLE_EDGE_TYPES = [
 def retrieve_graph_knowledge(state: DialogueState) -> DialogueState:
     user_input = state.get("user_input", "")
     npc = state.get("npc")
+    graph = get_world_graph()
+    npc_entity = None
+    if npc:
+        npc_entity = graph.get_entity(getattr(npc, "entity_id", "")) or graph.get_entity_by_name(
+            getattr(npc, "name", "")
+        )
     npc_context = {
-        "npc_id": getattr(npc, "name", "unknown").lower().replace(" ", "_"),
-        "npc_name": getattr(npc, "name", ""),
-        "npc_location": getattr(npc, "location", ""),
+        "npc_id": getattr(npc, "entity_id", getattr(npc, "name", "unknown")).lower().replace(" ", "_")
+        if npc
+        else "unknown",
+        "npc_name": getattr(npc, "name", "") if npc else "",
+        "npc_location": "",
         "world_date": "",
     }
+    if npc_entity and npc_entity.properties.get("location"):
+        npc_context["npc_location"] = str(npc_entity.properties.get("location"))
 
     store = get_world_store()
     world_hints = store.world_hints()
-    query_spec = route_query(user_input, npc_context, world_hints)
+    recent_entities = state.get("recent_entities", [])
+    query_spec = route_query(user_input, npc_context, world_hints, recent_entities)
     state["query_spec"] = query_spec.model_dump()
     LOGGER.info("Router intent=%s query='%s'", query_spec.intent, query_spec.query_text)
 
@@ -57,7 +68,6 @@ def retrieve_graph_knowledge(state: DialogueState) -> DialogueState:
         ",".join(graph_spec.edge_types),
     )
 
-    graph = get_world_graph()
     if graph_spec.graph_intent == graph_spec.graph_intent.NONE:
         state["graph_facts"] = []
         state["graph_neighbor_ids"] = []
@@ -65,9 +75,16 @@ def retrieve_graph_knowledge(state: DialogueState) -> DialogueState:
     edge_types = graph_spec.edge_types or None
 
     entity_names = [entity.name for entity in query_spec.entities]
-    if not entity_names and npc is not None:
-        entity_names = [getattr(npc, "name", "")]
-    entity_ids = store.resolve_entity_ids(entity_names)
+    subject_entity = query_spec.subject_entity or ""
+    if subject_entity:
+        filtered_entity_names = [subject_entity]
+    elif not entity_names and npc is not None:
+        filtered_entity_names = [getattr(npc, "name", "")]
+    else:
+        filtered_entity_names = entity_names
+    entity_ids = store.resolve_entity_ids(filtered_entity_names)
+    if not entity_ids and npc is not None:
+        entity_ids = store.resolve_entity_ids([getattr(npc, "name", "")])
     neighbor_entity_ids = set()
     graph_facts = []
 
@@ -88,6 +105,20 @@ def retrieve_graph_knowledge(state: DialogueState) -> DialogueState:
             else:
                 graph_facts.append(f"{source_name} {relation} {target_name}")
             neighbor_entity_ids.add(edge.target_id)
+
+    for neighbor_id in neighbor_entity_ids:
+        neighbor = graph.get_entity(neighbor_id)
+        if not neighbor:
+            continue
+        props = neighbor.properties or {}
+        for key, value in props.items():
+            if value in (None, "", [], {}):
+                continue
+            if isinstance(value, list):
+                value_text = ", ".join(str(item) for item in value)
+            else:
+                value_text = str(value)
+            graph_facts.append(f"{neighbor.name} {key} {value_text}")
 
     state["graph_facts"] = graph_facts
     state["graph_neighbor_ids"] = list(neighbor_entity_ids)

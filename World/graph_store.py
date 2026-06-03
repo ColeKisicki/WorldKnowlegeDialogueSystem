@@ -3,6 +3,8 @@ import os
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 
+from config import GRAPH_BACKEND, NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
+
 
 @dataclass(frozen=True)
 class GraphEntity:
@@ -12,6 +14,7 @@ class GraphEntity:
     aliases: List[str] = field(default_factory=list)
     description: str = ""
     tags: List[str] = field(default_factory=list)
+    properties: Dict[str, object] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -40,6 +43,19 @@ class InMemoryGraphStore:
         with open(self.entities_path, "r", encoding="utf-8") as f:
             payload = json.load(f)
         for raw in payload.get("entities", []):
+            extra_props = {
+                key: value
+                for key, value in raw.items()
+                if key
+                not in {
+                    "id",
+                    "name",
+                    "type",
+                    "aliases",
+                    "description",
+                    "tags",
+                }
+            }
             entity = GraphEntity(
                 entity_id=raw["id"],
                 name=raw["name"],
@@ -47,6 +63,7 @@ class InMemoryGraphStore:
                 aliases=raw.get("aliases", []),
                 description=raw.get("description", ""),
                 tags=raw.get("tags", []),
+                properties=extra_props,
             )
             self.entities[entity.entity_id] = entity
 
@@ -116,14 +133,139 @@ class InMemoryGraphStore:
         return collected
 
 
-_GRAPH_INSTANCE: Optional[InMemoryGraphStore] = None
+class Neo4jGraphStore:
+    def __init__(self, uri: str, user: str, password: str):
+        from neo4j import GraphDatabase
+
+        self._driver = GraphDatabase.driver(uri, auth=(user, password))
+
+    def close(self) -> None:
+        self._driver.close()
+
+    def _row_to_entity(self, row: Dict) -> GraphEntity:
+        node = row["e"]
+        node_props = dict(node)
+        extra_props = {
+            key: value
+            for key, value in node_props.items()
+            if key
+            not in {
+                "id",
+                "name",
+                "type",
+                "aliases",
+                "description",
+                "tags",
+            }
+        }
+        return GraphEntity(
+            entity_id=node.get("id", ""),
+            name=node.get("name", ""),
+            type=node.get("type", "unknown"),
+            aliases=node.get("aliases", []) or [],
+            description=node.get("description", ""),
+            tags=node.get("tags", []) or [],
+            properties=extra_props,
+        )
+
+    def _row_to_edge(self, row: Dict) -> GraphEdge:
+        rel = row["r"]
+        properties_json = rel.get("properties_json", "{}") or "{}"
+        try:
+            properties = json.loads(properties_json)
+        except json.JSONDecodeError:
+            properties = {}
+        return GraphEdge(
+            edge_id=rel.get("id", ""),
+            type=rel.get("type", "RELATED_TO"),
+            source_id=row["source_id"],
+            target_id=row["target_id"],
+            properties=properties,
+        )
+
+    def get_entity_by_name(self, name: str) -> Optional[GraphEntity]:
+        if not name:
+            return None
+        query = """
+        MATCH (e:Entity)
+        WHERE toLower(e.name) = toLower($name)
+           OR any(a IN e.aliases WHERE toLower(a) = toLower($name))
+        RETURN e
+        LIMIT 1
+        """
+        with self._driver.session() as session:
+            result = session.run(query, name=name).single()
+            if not result:
+                return None
+            return self._row_to_entity(result)
+
+    def get_entity(self, entity_id: str) -> Optional[GraphEntity]:
+        query = "MATCH (e:Entity {id: $id}) RETURN e LIMIT 1"
+        with self._driver.session() as session:
+            result = session.run(query, id=entity_id).single()
+            if not result:
+                return None
+            return self._row_to_entity(result)
+
+    def get_edges(self, subject_id: str, predicate: Optional[str] = None) -> List[GraphEdge]:
+        if predicate:
+            query = """
+            MATCH (a:Entity {id: $id})-[r:REL]->(b:Entity)
+            WHERE r.type = $predicate
+            RETURN r, a.id AS source_id, b.id AS target_id
+            """
+            params = {"id": subject_id, "predicate": predicate}
+        else:
+            query = """
+            MATCH (a:Entity {id: $id})-[r:REL]->(b:Entity)
+            RETURN r, a.id AS source_id, b.id AS target_id
+            """
+            params = {"id": subject_id}
+
+        with self._driver.session() as session:
+            result = session.run(query, **params)
+            return [self._row_to_edge(row) for row in result]
+
+    def get_neighbors(
+        self,
+        entity_id: str,
+        edge_types: Optional[List[str]] = None,
+        depth: int = 1,
+    ) -> List[GraphEdge]:
+        if depth <= 0:
+            return []
+
+        if edge_types:
+            query = """
+            MATCH (a:Entity {id: $id})-[r:REL]->(b:Entity)
+            WHERE r.type IN $edge_types
+            RETURN r, a.id AS source_id, b.id AS target_id
+            """
+            params = {"id": entity_id, "edge_types": edge_types}
+        else:
+            query = """
+            MATCH (a:Entity {id: $id})-[r:REL]->(b:Entity)
+            RETURN r, a.id AS source_id, b.id AS target_id
+            """
+            params = {"id": entity_id}
+
+        with self._driver.session() as session:
+            result = session.run(query, **params)
+            return [self._row_to_edge(row) for row in result]
 
 
-def get_world_graph() -> InMemoryGraphStore:
+_GRAPH_INSTANCE: Optional[object] = None
+
+
+def get_world_graph():
     global _GRAPH_INSTANCE
     if _GRAPH_INSTANCE is None:
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        entities_path = os.path.join(base_dir, "data", "entities.json")
-        edges_path = os.path.join(base_dir, "data", "edges.json")
-        _GRAPH_INSTANCE = InMemoryGraphStore(entities_path, edges_path)
+        backend = os.getenv("GRAPH_BACKEND", GRAPH_BACKEND).lower()
+        if backend == "neo4j":
+            _GRAPH_INSTANCE = Neo4jGraphStore(NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD)
+        else:
+            base_dir = os.path.dirname(os.path.abspath(__file__))
+            entities_path = os.path.join(base_dir, "data", "entities.json")
+            edges_path = os.path.join(base_dir, "data", "edges.json")
+            _GRAPH_INSTANCE = InMemoryGraphStore(entities_path, edges_path)
     return _GRAPH_INSTANCE

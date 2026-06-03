@@ -29,6 +29,7 @@ def build_prompt(state: DialogueState) -> DialogueState:
     user_input = state.get("user_input", "")
     retrieval_results = state.get("retrieval_results", [])
     graph_facts = state.get("graph_facts", [])
+    npc_node_facts = state.get("npc_node_facts", [])
     
     # Build full prompt
     full_prompt = f"""{system_prompt}"""
@@ -47,8 +48,10 @@ def build_prompt(state: DialogueState) -> DialogueState:
 
     full_prompt += f"\n\nWORLD FACTS:\n{facts_block}"
 
-    if graph_facts:
-        graph_block = "\n".join(f"- {fact}" for fact in graph_facts)
+    combined_graph = list(npc_node_facts or [])
+    combined_graph.extend(graph_facts or [])
+    if combined_graph:
+        graph_block = "\n".join(f"- {fact}" for fact in combined_graph)
     else:
         graph_block = "None."
 

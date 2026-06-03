@@ -9,3 +9,4 @@ onnxruntime>=1.17.0
 tokenizers>=0.15.0
 tqdm>=4.66.0
 pydantic>=2.5.0
+neo4j>=5.14.0

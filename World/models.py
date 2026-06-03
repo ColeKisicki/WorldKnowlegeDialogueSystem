@@ -9,7 +9,6 @@ class Entity:
     type: str
     aliases: List[str] = field(default_factory=list)
     description: str = ""
-    relationships: List[Dict[str, str]] = field(default_factory=list)
 
 
 @dataclass(frozen=True)

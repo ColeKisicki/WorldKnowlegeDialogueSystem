@@ -19,13 +19,8 @@ from Dialogue.trace import enable_trace
 def create_sample_npc() -> NPC:
     """Create a sample NPC for testing."""
     return NPC(
+        entity_id="ent_aldric",
         name="Aldric",
-        age=45,
-        location="The Crooked Tavern, Port Valor",
-        profession="Tavern Keeper",
-        traits=["observant", "gruff", "curious", "skeptical"],
-        childhood_backstory="Born to a fisherman's family in Port Valor. Spent youth learning the docks and the people who sailed them. Lost his father to a storm at sea when he was twelve.",
-        adult_backstory="Inherited the Crooked Tavern from his uncle at 25. Has run it for twenty years, making it a hub for sailors, merchants, and adventurers. Has heard countless stories and seen the rise and fall of fortunes."
     )
 
 

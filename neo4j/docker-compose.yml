@@ -1,0 +1,34 @@
+services:
+  neo4j:
+    image: neo4j:5
+    container_name: world-neo4j
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    environment:
+      - NEO4J_AUTH=neo4j/neo4jpassword
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+  neo4j_import:
+    image: python:3.12-slim
+    container_name: world-neo4j-import
+    depends_on:
+      - neo4j
+    working_dir: /app
+    volumes:
+      - ..:/app
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=neo4jpassword
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install --no-cache-dir neo4j && python - <<'PY'\nimport socket, time\nhost, port = 'neo4j', 7687\nfor _ in range(60):\n    try:\n        with socket.create_connection((host, port), timeout=2):\n            break\n    except OSError:\n        time.sleep(2)\nelse:\n    raise SystemExit('Neo4j not ready on bolt port')\nPY\npython neo4j/import_world.py",
+      ]
+    restart: "no"
+volumes:
+  neo4j_data:
+  neo4j_logs:

@@ -55,6 +55,8 @@ class DialogueState(TypedDict):
     graph_facts: List[str]
     graph_query_spec: Dict[str, Any]
     graph_neighbor_ids: List[str]
+    npc_node_facts: List[str]
+    recent_entities: List[str]
     
     # Extensible fields for future phases
     # retrieval_results: Optional[List[str]]  # For knowledge retrieval

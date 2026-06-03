@@ -109,6 +109,8 @@ def run_dialogue_turn(graph, npc: NPC, user_input: str, conversation_history: st
         "graph_facts": [],
         "graph_query_spec": {},
         "graph_neighbor_ids": [],
+        "npc_node_facts": [],
+        "recent_entities": [],
     }
     
     result = graph.invoke(initial_state)

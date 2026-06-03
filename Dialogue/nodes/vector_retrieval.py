@@ -38,14 +38,27 @@ def retrieve_vector_knowledge(state: DialogueState) -> DialogueState:
     query_text = query_spec.get("query_text") or user_input
 
     store = get_world_store()
-    semantic_hits = store.search(query_text, n_results=5)
-    LOGGER.info("Vector semantic hits=%d", len(semantic_hits))
-    _log_hits("Vector semantic", semantic_hits)
+    semantic_hits = []
+
+    subject_entity = query_spec.get("subject_entity", "")
+    if subject_entity:
+        entity_names = [subject_entity]
+    else:
+        entity_names = [entity.get("name") for entity in query_spec.get("entities", [])]
 
     entity_hits = []
-    entity_names = [entity.get("name") for entity in query_spec.get("entities", [])]
     for entity_id in store.resolve_entity_ids(entity_names):
         entity_hits.extend(store.facts_for_entity(entity_id, limit=3))
+
+    if subject_entity:
+        semantic_limit = 2
+    else:
+        semantic_limit = 5
+
+    if semantic_limit > 0:
+        semantic_hits = store.search(query_text, n_results=semantic_limit)
+        LOGGER.info("Vector semantic hits=%d", len(semantic_hits))
+        _log_hits("Vector semantic", semantic_hits)
 
     if entity_hits:
         LOGGER.info("Vector entity-linked hits=%d", len(entity_hits))
@@ -58,7 +71,10 @@ def retrieve_vector_knowledge(state: DialogueState) -> DialogueState:
         LOGGER.info("Vector neighbor hits=%d", len(related_hits))
         _log_hits("Vector neighbor", related_hits)
 
-    combined = semantic_hits + entity_hits + related_hits
+    if subject_entity:
+        combined = entity_hits + related_hits + semantic_hits
+    else:
+        combined = semantic_hits + entity_hits + related_hits
     if combined:
         seen = set()
         deduped = []
@@ -74,6 +90,13 @@ def retrieve_vector_knowledge(state: DialogueState) -> DialogueState:
 
     if LOGGER.isEnabledFor(logging.DEBUG):
         print_retrieval_results(combined)
+
+    recent_entities = []
+    for hit in combined:
+        name = hit.get("entity_name")
+        if name and name not in recent_entities:
+            recent_entities.append(name)
+    state["recent_entities"] = recent_entities
 
     record_trace("retrieve_vector_knowledge", state)
     return state
